@@ -81,6 +81,48 @@ def check_vercel() -> bool:
     return True
 
 
+def check_vercel_git_link(project_dir: Path | None = None) -> bool:
+    """Report whether the linked Vercel project is connected to its GitHub repo."""
+    import json
+
+    project_dir = project_dir or Path(__file__).resolve().parent.parent
+    proj_file = project_dir / ".vercel" / "project.json"
+    auth_file = Path.home() / ".local" / "share" / "com.vercel.cli" / "auth.json"
+    if not proj_file.exists() or not auth_file.exists():
+        print("  Vercel git link: SKIP (no linked project or no CLI session)")
+        return True
+    ids = json.loads(proj_file.read_text())
+    token = json.loads(auth_file.read_text())["token"]
+    headers = {"Authorization": f"Bearer {token}"}
+    r = httpx.get(
+        f"https://api.vercel.com/v9/projects/{ids['projectId']}", headers=headers, timeout=30
+    )
+    link = (r.json() or {}).get("link") or {}
+    if link.get("type") == "github":
+        print(
+            f"  Vercel git link: OK  {link.get('org')}/{link.get('repo')}"
+            f"  branch={link.get('productionBranch')}"
+        )
+        return True
+    names = httpx.get(
+        "https://api.vercel.com/v1/integrations/git-namespaces",
+        headers=headers,
+        params={"provider": "github"},
+        timeout=30,
+    ).json()
+    if not names:
+        print(
+            "  Vercel git link: NOT CONNECTED - install the Vercel GitHub App first: "
+            "https://github.com/apps/vercel/installations/new"
+        )
+    else:
+        print(
+            "  Vercel git link: NOT CONNECTED - run: "
+            "vercel git connect https://github.com/<owner>/<repo>.git"
+        )
+    return False
+
+
 def main() -> int:
     keys = load()
     print("Integration check")
@@ -94,6 +136,7 @@ def main() -> int:
     else:
         ok.append(check_tavily(keys["TAVILY_API_KEY"]))
     ok.append(check_vercel())
+    ok.append(check_vercel_git_link())
     return 0 if all(ok) else 1
 
 

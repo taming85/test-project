@@ -94,35 +94,47 @@ vercel teams ls   # Hobby 팀 확인
   **지금 로그인된 계정이 본인 계정이 맞는지 먼저 확인하라.**
   (`pdlee1985-3111` / `pdlee1985@gmail.com` 이 아니면 로그아웃하고 다시 로그인)
 
-### B. GitHub 저장소 연동 — "git push 하면 자동배포" (아직 안 됨, 이걸 하면 된다)
+### B. GitHub 저장소 연동 — "git push 하면 자동배포" (이제 GitHub 앱 설치만 남음)
 
-**선행 조건: Vercel 계정에 GitHub 로그인 연결(Login Connection)이 있어야 한다.**
-연결이 없어서 실제로 이런 오류가 났다:
+자동배포에는 **두 가지가 각각 필요**하다. 하나만 하면 아래처럼 막힌다.
+
+| 필요한 것 | 상태 | 확인 방법 |
+|---|---|---|
+| 1. Vercel 계정의 GitHub 로그인 연결(Login Connection) | **완료** | `vercel link --yes`가 오류 없이 통과 |
+| 2. Vercel GitHub App 설치 (저장소 접근 권한) | **필요** | API: `To link a GitHub repository, you need to install the GitHub integration first.` |
+
+실제로 나온 오류 (1번이 없을 때 → 2번이 없을 때 순서로):
 
 ```
+# 1번이 없을 때
 Error: Failed to link taming85/test-project.
 You need to add a Login Connection to your GitHub account first. (400)
+
+# 2번이 없을 때 (현재 상태)
+Error: Failed to connect taming85/test-project to project.
+Make sure there aren't any typos and that you have access to the repository if it's private.
+→ API 원문: code=bad_request, action="Install GitHub App", link=https://github.com/apps/vercel
 ```
 
-순서:
+**남은 작업 (브라우저 1분):**
 
-1. 브라우저에서 https://vercel.com/account/settings/authentication 접속 → 로그인
-2. **Add Login Connection → GitHub → Continue with GitHub → Authorize**
-   - GitHub 계정 `taming85`로 승인
-   - 저장소 접근 범위: `All repositories` 또는 `Only select repositories` → `test-project` 선택
-3. 다시 이 PC에서 저장소를 Vercel 프로젝트에 연결한다:
+1. https://github.com/apps/vercel/installations/new 접속 (GitHub에 `taming85`로 로그인)
+2. 계정 `taming85` 선택 → **Repository access**
+   - `All repositories`, 또는 `Only select repositories` → `test-project` 선택
+3. **Install** 클릭
+4. 이 PC에서 연결:
 
 ```bash
 cd /home/taming85/workspace/test-project
 vercel git connect https://github.com/taming85/test-project.git
+uv run --with httpx --with python-dotenv python3 scripts/check_integrations.py
+#   Vercel git link: OK  taming85/test-project  branch=main
 ```
 
-4. 연동 확인:
+설치 여부는 이 API로도 확인할 수 있다 (비어 있으면 미설치):
 
 ```bash
-vercel git connect --help          # 사용법
-vercel project ls                  # 프로젝트 목록
-# 대시보드: 프로젝트 → Settings → Git 에 저장소가 보이면 성공
+vercel api /v1/integrations/git-namespaces?provider=github
 ```
 
 이후에는 `main` 브랜치에 push하면 프로덕션 자동배포, PR/다른 브랜치는
@@ -233,7 +245,7 @@ DNS는 도메인 등록기관에서 Vercel이 안내하는 레코드(A 또는 CN
 | 배포했는데 `/` 가 404, `/index.html`은 308 | `vercel.json`의 `"cleanUrls": true`가 정적 루트 매핑을 깨뜨림 | `cleanUrls` 삭제(현재 적용됨). 필요하면 `rewrites`로 직접 매핑 |
 | `gh auth login --with-token` 이 exit 1 | 셸에 `GH_TOKEN`/`GITHUB_TOKEN`이 export되어 있어 gh가 무시 | `env -u GH_TOKEN -u GITHUB_TOKEN gh auth login --with-token` |
 | 배포 URL을 남에게 공유하면 로그인 화면이 뜸 | 배포별 URL은 Vercel Authentication 보호 대상 | 프로덕션 alias(`https://test-project-two-ochre.vercel.app`)를 공유 |
-| `vercel git connect` 가 400 | Vercel에 GitHub 로그인 연결이 없음 | 위 2-B의 1~2단계 수행 |
+| `vercel git connect` 가 400 | ① GitHub 로그인 연결 없음, 또는 ② Vercel GitHub App 미설치 | 위 2-B 표의 1번·2번을 각각 확인 (오류 문구로 구분됨) |
 | `vercel tokens add` 가 403 | CLI OAuth 세션은 토큰 발급 권한 없음 | 대시보드에서 토큰 생성 (2-C) |
 | 새 터미널에서 `TAVILY_API_KEY`가 비어 있음 | 비대화형 셸은 `.bashrc`를 안 읽음 | 스크립트에서 `secrets.env`를 직접 읽기 |
 
