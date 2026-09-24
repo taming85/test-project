@@ -35,7 +35,8 @@
 키 파일 위치(값은 여기 적지 않는다):
 
 ```
-~/.config/dev-secrets/secrets.env     # 0600, GITHUB_TOKEN / TAVILY_API_KEY
+~/API_KEYS.yaml                       # 0600, 원본(사람이 읽고 고치는 파일)
+~/.config/dev-secrets/secrets.env     # 0600, 위 YAML에서 자동 생성
 ~/.git-credentials                    # 0600, git HTTPS 자동 로그인
 ~/.config/gh/hosts.yml                # gh CLI 로그인
 ~/.local/share/com.vercel.cli/auth.json  # Vercel CLI 세션
@@ -50,6 +51,12 @@ uv run --with httpx --with python-dotenv python3 scripts/check_integrations.py
 #   GitHub: OK  user=taming85  repos=1
 #   Tavily: OK  results=1
 #   Vercel: OK  account=pdlee1985-3111
+```
+
+키를 바꿀 때는 `~/API_KEYS.yaml`만 고치고 아래를 실행하면 `secrets.env`가 다시 만들어진다:
+
+```bash
+python3 ~/.config/dev-secrets/sync_from_yaml.py
 ```
 
 `~/.bashrc`와 `~/.profile`이 `secrets.env`를 자동으로 읽는다. 그래서 새 터미널에서

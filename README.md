@@ -21,5 +21,6 @@ vercel deploy --prod     # production
 
 ## Secrets
 
-Local keys live outside the repo, in `~/.config/dev-secrets/secrets.env` (0600):
-`GITHUB_TOKEN`, `TAVILY_API_KEY`. Tests use them; nothing is committed.
+Local keys live outside the repo, in `~/API_KEYS.yaml` (0600, source of truth).
+`~/.config/dev-secrets/secrets.env` is generated from it by
+`python3 ~/.config/dev-secrets/sync_from_yaml.py`. Nothing is committed.
