@@ -12,7 +12,7 @@ on:
         default: "365"
       when:
         description: "구글뉴스 기간 제한 (예: 30d, 6m, 1y)"
-        default: "30d"
+        default: "1y"
 
 permissions:
   contents: read
@@ -45,7 +45,7 @@ jobs:
       - name: Collect and load
         id: collect
         run: |
-          python -m radar.run             --days ${{ github.event.inputs.days || '365' }}             --when "${{ github.event.inputs.when || '30d' }}"
+          python -m radar.run             --days ${{ github.event.inputs.days || '365' }}             --when "${{ github.event.inputs.when || '1y' }}"
 
       - name: Alert on new contracts
         run: python -m radar.alert data/new_events.json
