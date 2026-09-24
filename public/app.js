@@ -174,6 +174,16 @@
       var cat = r.category === "equipment"
         ? '<span class="chip equipment">설비·장비</span>'
         : '<span class="chip parts">부품·모듈</span>';
+      var d = r.detail || {};
+      var extra = [];
+      if (d.revenue_ratio) extra.push("매출액 대비 " + d.revenue_ratio + "%");
+      if (d.region) extra.push("지역 " + d.region);
+      if (d.usd) extra.push("약 " + Number(d.usd).toLocaleString("en-US") + " USD");
+      if (d.hold_reason) extra.push("공시유보: " + d.hold_reason + (d.hold_until ? " (~" + d.hold_until + ")" : ""));
+      var verified = r.source_kind === "dart";
+      var badge = verified
+        ? '<span class="chip dart" title="' + esc(extra.join(" · ") || "DART 공시 원문 확인") + '">공시 정본</span>'
+        : '<span class="chip news" title="언론 보도 기반">보도</span>';
       var title = r.url
         ? '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.title || "") + "</a>"
         : esc(r.title || "");
@@ -183,8 +193,10 @@
         "<td>" + esc(r.customer) + "</td>" +
         '<td class="num">' + amount + "</td>" +
         "<td>" + cat + "</td>" +
-        '<td class="title-cell">' + title + "</td>" +
-        "<td>" + esc(r.source || "-") + "</td></tr>"
+        '<td class="title-cell">' + title +
+        (extra.length ? '<div class="detail-line">' + esc(extra.join(" · ")) + "</div>" : "") +
+        "</td>" +
+        "<td>" + badge + "</td></tr>"
       );
       host.appendChild(tr);
     });

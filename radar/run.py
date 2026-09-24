@@ -37,20 +37,23 @@ def run(days: int, when, use_db: bool) -> dict:
     (DATA / f"articles_{today}.json").write_text(
         json.dumps(articles, ensure_ascii=False, indent=1), encoding="utf-8")
 
-    print("[2/5] DART 공시 수집")
+    print("[2/5] DART 공시 수집 (정본 금액)")
     dart_rows = []
     if dart.enabled():
-        dart_rows = dart.supply_contracts(
-            (today - dt.timedelta(days=days)).strftime("%Y%m%d"), today.strftime("%Y%m%d"))
-        print(f"      공급계약 공시 {len(dart_rows)}건")
+        s = (today - dt.timedelta(days=max(days, 30))).strftime("%Y%m%d")
+        e = today.strftime("%Y%m%d")
+        dart_rows = dart.collect(s, e)
+        print(f"      발주처 매칭 공시 계약 {len(dart_rows)}건")
     else:
-        print("      OPENDART_KEY 없음 - 건너뜀")
+        print("      OPENDART_KEY 없음 - 뉴스 소스만 사용")
     (DATA / f"dart_{today}.json").write_text(
         json.dumps(dart_rows, ensure_ascii=False, indent=1), encoding="utf-8")
 
     print("[3/5] 이벤트 정규화 / 중복제거")
-    events = extract.build(articles)
-    print(f"      계약 이벤트 {len(events)}건")
+    news_events = extract.build(articles)
+    events = extract.dedupe(extract.merge_sources(dart_rows, news_events))
+    print(f"      공시 {len(dart_rows)}건 + 뉴스 {len(news_events)}건 -> "
+          f"중복제거 후 {len(events)}건")
     (DATA / "events.json").write_text(
         json.dumps(events, ensure_ascii=False, indent=1), encoding="utf-8")
 

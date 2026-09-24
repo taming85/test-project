@@ -85,7 +85,10 @@ def to_event(item: dict) -> dict | None:
 
 def dedupe(events: list[dict],AmountWindowDays=14, NearWindowDays=3) -> list[dict]:
     """동일 계약 복수 보도 제거: 동일(공급사, 발주처) + 금액유사(14일) 또는 근접일자(3일)."""
-    ordered = sorted(events, key=lambda r: ((r["amount"] or 0), r["date"]), reverse=True)
+    def rank(r):
+        # 공시(DART)를 항상 우선, 그다음 금액 큰 순
+        return (r.get("source_kind") != "dart", -(r["amount"] or 0), r["date"])
+    ordered = sorted(events, key=rank)
     kept: list[dict] = []
     for e in ordered:
         d = dt.date.fromisoformat(e["date"])
@@ -104,6 +107,22 @@ def dedupe(events: list[dict],AmountWindowDays=14, NearWindowDays=3) -> list[dic
         if not dup:
             kept.append(e)
     return sorted(kept, key=lambda r: r["date"], reverse=True)
+
+
+def merge_sources(dart_events, news_events, window_days=14):
+    """동일 계약이면 공시(DART)를 우선하고 뉴스판을 제거한다."""
+    kept = []
+    for n in news_events:
+        nd = dt.date.fromisoformat(n["date"])
+        superseded = any(
+            n["supplier"] == d["supplier"]
+            and set(n["customers"]) & set(d["customers"])
+            and abs((nd - dt.date.fromisoformat(d["date"])).days) <= window_days
+            for d in dart_events
+        )
+        if not superseded:
+            kept.append(n)
+    return dart_events + kept
 
 
 def build(articles: list[dict]) -> list[dict]:

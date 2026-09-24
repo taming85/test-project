@@ -33,6 +33,9 @@ def render(events, title="현대모비스·현대트랜시스 배터리 계약 �
     disclosed = sum(e["amount"] or 0 for e in recent)
     L.append(f"- 금액 공개분 합계: **{disclosed/1e8:,.0f}억원** "
              f"(금액 미공개 {sum(1 for e in recent if not e['amount'])}건)")
+    dart_n = sum(1 for e in recent if e.get("source_kind") == "dart")
+    L.append(f"- 출처 신뢰도: **공시(DART) {dart_n}건** / 보도 기반 {len(recent)-dart_n}건 "
+             f"— 공시는 금액·상대방이 공시 원문으로 확인된 건입니다.")
     L.append("")
 
     if recent:
@@ -50,12 +53,13 @@ def render(events, title="현대모비스·현대트랜시스 배터리 계약 �
                           ("부품·모듈 공급계약 (참고)", parts)):
         L.append(f"## {label}")
         L.append("")
-        L.append("| 계약일 | 공급사 | 발주처 | 금액 | 제목(요약) | 출처 |")
-        L.append("|---|---|---|---|---|---|")
+        L.append("| 계약일 | 공급사 | 발주처 | 금액 | 제목(요약) | 출처 | 신뢰도 |")
+        L.append("|---|---|---|---|---|---|---|")
         for e in subset:
             t = e["title"].rsplit(" - ", 1)[0]
+            mark = "**공시 정본**" if e.get("source_kind") == "dart" else "보도"
             L.append(f"| {e['date']} | **{e['supplier']}** | {'·'.join(e['customers'])} | "
-                     f"**{won(e['amount'])}** | {t[:70]} | {e.get('source') or '-'} |")
+                     f"**{won(e['amount'])}** | {t[:70]} | {e.get('source') or '-'} | {mark} |")
         if not subset:
             L.append("| - | - | - | - | 해당 없음 | - |")
         L.append("")
@@ -78,8 +82,9 @@ def render(events, title="현대모비스·현대트랜시스 배터리 계약 �
     L.append("")
     L.append("| 소스 | 내용 | 강점 | 한계 |")
     L.append("|---|---|---|---|")
-    L.append("| Google News RSS | 관련 기사 수집 | 키 불필요, 수 시간~수일 선행, 비상장/미공시 계약도 포착 | 금액이 기사에 없으면 미공개, 링크가 Google 리다이렉트 |")
-    L.append("| DART Open API | 상장사 단일판매·공급계약 공시 | 금액·상대방·계약기간 정확, 전수 조회 | 상장 공급사만, 비상장 발주처 공시 없음 |")
+    L.append("| **DART Open API** (적용 중) | 기업별 '단일판매·공급계약' 공시 원문 | 금액·상대방·기간·매출액대비 정확, 해외법인 상대방까지 확인 | 공시 의무/자율 기준 미달 계약은 누락 |")
+    L.append("| Google News RSS (적용 중) | 관련 기사 수집 | 미공시 계약·보도자료도 포착, 선행(수 시간~수일) | 기사에 금액 없으면 미공개, 동일 계약 중복 보도 |")
+    L.append("| 신규]}$ | 추가 검토 | — | 미적용 |".replace("신규]}$ ","본문 정밀추출"))
     L.append("")
     L.append("> 금액이 '미공개'인 건은 후속 단계에서 본문 정밀추출 또는 DART 공시 대조로 보강합니다.")
     return "\n".join(L)

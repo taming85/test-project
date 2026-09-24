@@ -1,16 +1,31 @@
 [
  {
-  "date": "2026-09-07",
+  "date": "2026-09-04",
   "supplier": "톱텍",
   "customers": [
    "현대모비스"
   ],
-  "amount": 25600000000.0,
+  "amount": 25595348600,
   "equipment": true,
-  "title": "톱텍, 현대모비스 체코 배터리 장비 256억원 수주 - 디일렉",
-  "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBDSmd2MUJLOGl2TTBtMWZtb1djQmxFa1NIVXZtaEc3bFZUblJhaHFKdllnME5DOWNiZmF2T3VTcGN1bXpTVFZGdDg3TzBCa1Fla0VNX1EzenNTbzY5TjctVGpyVVNmQQ?oc=5",
-  "source": null,
-  "query": "현대모비스 공급계약"
+  "title": "파우치 EV 배터리 조립라인 (MOBIS Automotive Czech, s.r.o.)",
+  "link": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260904900187",
+  "source": "DART 공시",
+  "source_kind": "dart",
+  "dart_no": "20260904900187",
+  "detail": {
+   "counterpart_raw": "MOBIS Automotive Czech, s.r.o.",
+   "revenue": 171001529881,
+   "revenue_ratio": 14.97,
+   "region": "체코",
+   "period": [
+    "2026-09-04",
+    "2027-04-30"
+   ],
+   "usd": null,
+   "fx": 1580.35,
+   "hold_reason": null,
+   "hold_until": null
+  }
  },
  {
   "date": "2026-08-27",
@@ -18,12 +33,111 @@
   "customers": [
    "현대모비스"
   ],
-  "amount": 21100000000.0,
+  "amount": 21118932727,
   "equipment": true,
-  "title": "톱텍, 현대모비스 북미 전동화 법인에 각형 REEV 배터리 조립라인 211억원 규모 공급 계약 - 디지털투데이",
-  "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE1GWHFEWmNnQ0F6Qms4cVNpVGt4Q1BJZ2xGeVo3RmR4Y295bEpMRlJYZlVjOG9MbWtVLU81MkFzcHRLTjNyTmc0RnV3bW1aRmpDYlk3eFhwdkdpX1hPdWZkMXdJQXpNbEpZTVV0TFNVMkpRQ3M?oc=5",
-  "source": null,
-  "query": "현대모비스 공급계약"
+  "title": "각형 REEV 배터리 조립라인 (MOBIS North America Electrified Powertrain, LLC)",
+  "link": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260827900181",
+  "source": "DART 공시",
+  "source_kind": "dart",
+  "dart_no": "20260827900181",
+  "detail": {
+   "counterpart_raw": "MOBIS North America Electrified Powertrain, LLC",
+   "revenue": 171001529881,
+   "revenue_ratio": 12.35,
+   "region": "미국",
+   "period": [
+    "2026-08-27",
+    "2027-04-30"
+   ],
+   "usd": 15252732,
+   "fx": 1384.6,
+   "hold_reason": null,
+   "hold_until": null
+  }
+ },
+ {
+  "date": "2026-08-22",
+  "supplier": "톱텍",
+  "customers": [
+   "현대모비스"
+  ],
+  "amount": 20145216000,
+  "equipment": true,
+  "title": "원형 HEV 배터리 조립라인 (MOBIS North America Electrified Powertrain, LLC)",
+  "link": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260824900204",
+  "source": "DART 공시",
+  "source_kind": "dart",
+  "dart_no": "20260824900204",
+  "detail": {
+   "counterpart_raw": "MOBIS North America Electrified Powertrain, LLC",
+   "revenue": 171001529881,
+   "revenue_ratio": 11.78,
+   "region": "미국",
+   "period": [
+    "2026-08-22",
+    "2027-04-15"
+   ],
+   "usd": 14560000,
+   "fx": 1383.6,
+   "hold_reason": null,
+   "hold_until": null
+  }
+ },
+ {
+  "date": "2026-08-20",
+  "supplier": "인지컨트롤스",
+  "customers": [
+   "현대모비스"
+  ],
+  "amount": 475742538388,
+  "equipment": false,
+  "title": "SENSING ASSY 6종(Cell Connection System) (현대모비스)",
+  "link": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260821800662",
+  "source": "DART 공시",
+  "source_kind": "dart",
+  "dart_no": "20260821800662",
+  "detail": {
+   "counterpart_raw": "현대모비스",
+   "revenue": 717902449045,
+   "revenue_ratio": 66.27,
+   "region": "-",
+   "period": [
+    "2028-09-01",
+    "2035-12-31"
+   ],
+   "usd": null,
+   "fx": null,
+   "hold_reason": "경영상 비밀유지",
+   "hold_until": "2028-09-01"
+  }
+ },
+ {
+  "date": "2026-08-11",
+  "supplier": "인지컨트롤스",
+  "customers": [
+   "현대모비스"
+  ],
+  "amount": 148519231339,
+  "equipment": false,
+  "title": "HOLDER ASSY(Cell Connection System) 4종 (현대모비스)",
+  "link": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260812800601",
+  "source": "DART 공시",
+  "source_kind": "dart",
+  "dart_no": "20260812800601",
+  "detail": {
+   "counterpart_raw": "현대모비스",
+   "revenue": 717902449045,
+   "revenue_ratio": 20.69,
+   "region": "북미",
+   "period": [
+    "2028-08-15",
+    "2034-12-31"
+   ],
+   "usd": null,
+   "fx": null,
+   "hold_reason": null,
+   "hold_until": null
+  }
  },
  {
   "date": "2026-04-29",
@@ -52,17 +166,17 @@
   "query": "현대모비스 공급계약"
  },
  {
-  "date": "2026-04-03",
+  "date": "2026-04-02",
   "supplier": "에이텀",
   "customers": [
    "현대모비스"
   ],
   "amount": null,
   "equipment": false,
-  "title": "에이텀, 현대모비스 ‘차세대 EV’ 파트너 낙점...10년 장기 수주 잭팟 - 핀포인트뉴스",
-  "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE94SjhzOXVWdlZ0OG1aMDdXamJHZDFEWmJ3TzUwNk40STBVYmZ5N2xqdW9YSkFjVDBPcVBGU3pMWmh1UlJSc3VZS2IyTGN3MmxXZ1JpaW5vSTc0Y3R0OTd2ZmlBdDFrOS1qa2tKSzN0SmhOOEnSAXdBVV95cUxOS1NCRTRqZEpMV2J5YWhvSC1ObXQ4TmVhQmxuSUY4dHZWYndfemp6OFZwWWI2bTlLNXYzQk5pNUNqZ1Izb0k5S0k2S2xzWERWbzgxbXFYVUI3T3B1Uzd2cDFWOWpieXVvaEZUZzBmNUxpbFpiMW41VQ?oc=5",
+  "title": "에이텀, 현대모비스 차세대 전기차 플랫폼 'SX3' 부품 첫 수주 - 파이낸스스코프",
+  "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5JTmZSQ0ZmdnBBcVlGZGhObGM2Q0J5Mi1TOHI2QVpJLXFCMjdJMzhvN2RWUV85LXNXUWNyNXZkWlg3NEw5dkt5NHpmSGFQdFJ5dHdBQjMzcXhNSDVpcmNWSDltRjFMV1U3N3c?oc=5",
   "source": null,
-  "query": "에이텀 현대모비스"
+  "query": "현대모비스 수주"
  },
  {
   "date": "2026-03-31",
@@ -78,30 +192,32 @@
   "query": "현대모비스 수주"
  },
  {
-  "date": "2025-12-22",
+  "date": "2025-12-17",
   "supplier": "계양전기",
   "customers": [
    "현대트랜시스"
   ],
   "amount": null,
   "equipment": false,
-  "title": "[특징주] 계양전기, “연일 상한가 랠리” 현대트랜시스 로봇 모듈 수주에 저평가 부각되며 ‘신고가’ - 와이드경제",
-  "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBBc1ZtUTRFODcxVUF1RW5NNnN6c2pGcUFTbmNRTEF5T25EVXE2azdsbUdldGpQQnpwU3Q5WW9uSXU0WHkxMnBmNGtCZWtQYlgtZkt3dFEzekF2SDJVNUVJSkI4NkhuMTZkU0lHZw?oc=5",
-  "source": null,
-  "query": "현대트랜시스 공급계약"
- },
- {
-  "date": "2025-12-18",
-  "supplier": "계양전기",
-  "customers": [
-   "현대트랜시스"
-  ],
-  "amount": null,
-  "equipment": false,
-  "title": "[N2 특징주] 계양전기, 현대트랜시스 '로보틱스 모듈 공급 계약' 소식에 상한가 - 뉴스투데이",
-  "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9hckdqSGo4cGwxQnB3QWEyUThqLW1xNU9aQXJkMUdpa2hCQ3RIZmxuSzJlOUVJYTBWLUxDNDhVc1J6UVpPck1ldUVaQ1BremZOS0R6SW01dTRnOEtXOHc?oc=5",
-  "source": null,
-  "query": "현대트랜시스 공급계약"
+  "title": "로보틱스 모듈 (현대트랜시스)",
+  "link": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20251217800849",
+  "source": "DART 공시",
+  "source_kind": "dart",
+  "dart_no": "20251217800849",
+  "detail": {
+   "counterpart_raw": "현대트랜시스",
+   "revenue": 369125242685,
+   "revenue_ratio": null,
+   "region": "한국",
+   "period": [
+    "2025-12-17",
+    "2030-12-31"
+   ],
+   "usd": null,
+   "fx": null,
+   "hold_reason": "경영상 비밀유지",
+   "hold_until": "2026-12-31"
+  }
  },
  {
   "date": "2025-06-18",
@@ -180,5 +296,18 @@
   "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9VMnp0Z01BRnRRSEJxMUc1c1d0ZDhYblc2LTJwaXpXeGlpc25OWUlMSk9yUGJDcWFRaTFIWnl2STJoUTlDMjJtM29vLXA5cXBSelRRZFpzYmFjeWRIMnZkOElfQnMzSUlqa25SbGowVldGU3pJ?oc=5",
   "source": null,
   "query": "수주공시 현대모비스"
+ },
+ {
+  "date": "2023-07-21",
+  "supplier": "화신",
+  "customers": [
+   "현대모비스"
+  ],
+  "amount": 940000000000.0,
+  "equipment": false,
+  "title": "화신, 현대모비스로부터 'eM 플랫폼 배터리 팩 케이스' 수주...'9400억원 규모' - 팍스경제TV",
+  "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1uN0R0MkpScHhuNU96bDAzUi01eWNDTzVaemdJc2gtYWU2c2dMNmVJZ3JkQjMyek1pNi1PNUtNVVIwdElScDBZOFh5MWxYLTliTDJUVDR1VWtkLUpmZWg2anAyRmFSZENj?oc=5",
+  "source": null,
+  "query": "현대모비스 배터리 계약"
  }
 ]

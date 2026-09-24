@@ -23,11 +23,13 @@
 | 항목 | 내용 |
 |---|---|
 | 목적 | 현대모비스·현대트랜시스 배터리 설비 수주 경쟁 동향 일일 모니터링 |
-| 1차 소스 | Google News RSS (키워드 조합, 수 시간~수일 선행) |
-| 2차 소스 | DART Open API `list.json` — 단일판매·공급계약 공시 (금액 정본) |
+| 1차 소스(**정본**) | DART Open API — 기업별 `단일판매·공급계약` 공시 원문 |
+| 2차 소스(보완) | Google News RSS (미공시 계약·보도자료, 수 시간~수일 선행) |
 | 저장 | Supabase Postgres `public.contracts` (event_key unique로 멱등 업서트) |
 | 노출 | 정적 SPA가 Supabase REST 직접 조회 (anon 키 + RLS SELECT 전용) |
-| 실패 모드 | ① RSS 구조 변경 ② 기사에 금액 없음(미공개) ③ 동일 계약 복수 보도 ④ 오탐(자사 수주 기사) |
+| 정본 금액 | 공시 원문의 `계약금액 총액(원)` / `확정 계약금액`(구·신 서식 모두 지원) |
+| 실패 모드 | ① 공시 유보(경영상 비밀유지)로 금액 `-` ② 공시 기준 미달 계약은 뉴스에만 존재 ③ 동일 계약 복수 보도 ④ 해외법인 상대방 표기(MOBIS Czech 등) |
+| 실제 관측 | 톱텍 256/211/201억 = 공시·보도 금액 일치 / 모티브링크 2,700억 = 공시 없음, 보도로만 확인 |
 | 되돌리기 | `crawl_runs` 로그로 확인 후 `contracts` 행 삭제 또는 `event_key` 교체 재실행 |
 | 비용 | 무료 티어 (GitHub Actions + Supabase Free + Vercel Hobby) |
 
@@ -37,8 +39,8 @@
 
 ```mermaid
 flowchart LR
-  A["Google News RSS<br/>키워드 95개"] -->|기사 1200건| C["정규화 / 중복제거"]
-  B["DART 공시<br/>OPENDART_KEY 필요"] -->|공급계약 원문| C
+  B["DART 공시<br/>단일판매·공급계약"] -->|정본 금액·상대방| C["병합<br/>공시 우선"]
+  A["Google News RSS<br/>키워드 95개"] -->|보도 기반| C
   C -->|계약 이벤트| D[("Supabase<br/>contracts")]
   C -->|리포트| E["reports/*.md"]
   C -->|신규 감지| F["Slack / GitHub Issue"]
@@ -46,6 +48,18 @@ flowchart LR
   H["GitHub Actions<br/>6시간 cron"] --> A
   H --> B
   I["push to main"] -->|CD| G
+```
+
+```mermaid
+sequenceDiagram
+  participant D as DART API
+  participant R as radar
+  participant S as Supabase
+  D->>R: corpCode.xml (기업명 → corp_code)
+  D->>R: list.json (기업별 공시 목록)
+  D->>R: document.xml (공시 원문)
+  R->>R: 계약상대방 별칭 매칭(현대모비스=MOBIS, 현대트랜시스=TRANSYS)
+  R->>S: 공시 우선 업서트 (news 중복 제거)
 ```
 
 동일 내용 ASCII:
@@ -80,7 +94,11 @@ flowchart LR
 ```bash
 uv venv .venv && uv pip install --python .venv/bin/python -r requirements.txt
 python3 scripts/gen_config.py          # public/config.js 생성
-.venv/bin/python -m radar.run --days 365 --when 30d
+export OPENDART_KEY=$(python3 -c "import yaml;print(yaml.safe_load(open('$HOME/API_KEYS.yaml'))['dart']['api_key'])")
+.venv/bin/python -m radar.run --days 365 --when 1y
+
+# 중복 정리(공시로 대체된 보도 행 제거)
+.venv/bin/python -c "import radar.db as db; print(db.purge_superseded(14))"
 ```
 
 검증:
@@ -109,8 +127,9 @@ Supabase 신규 프로젝트는 직접 DB 접속이 IPv6 전용이라 IPv4 전�
 
 ## 다음 단계 (미완)
 
-- [ ] `OPENDART_KEY` 발급 후 Tier1 정본 금액 매핑 (기사 금액 → 공시 금액 교차검증)
+- [x] `OPENDART_KEY` 적용 — 공시 정본 금액 매핑 완료 (보도 금액과 일치 검증됨)
 - [ ] Google News 리다이렉트 URL 원문 복원 → 본문 정밀추출로 `미공개` 금액 보강
+- [ ] 워치리스트에 없는 공급사 탐지를 위한 **전체 공시 일일 스캔** 추가
 - [ ] 공급사 사전 자동 확장 (기사에서 미등록 업체명 후보 추출 → 승인 큐)
 - [ ] Vercel Git 연동(대시보드 1회 클릭) 후 Actions 배포 대신 Git 트리거로 단순화
 
