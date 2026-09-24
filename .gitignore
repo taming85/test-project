@@ -5,3 +5,13 @@ node_modules/
 .DS_Store
 .vercel
 .env*
+
+# Radar pipeline
+.venv/
+__pycache__/
+*.pyc
+shots/
+data/articles_*.json
+data/dart_*.json
+data/new_events.json
+reports/*.md

@@ -1,0 +1,10 @@
+.venv/
+radar/
+data/
+reports/
+shots/
+scripts/
+docs/
+*.md
+.vercel/
+.github/

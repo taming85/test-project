@@ -1,0 +1,61 @@
+name: Radar crawl
+
+# 실시간에 가깝게: 6시간마다 + 수동 실행
+# GitHub Actions cron은 UTC. '17 */6' = 00:17 / 06:17 / 12:17 / 18:17 KST
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "리포트 집계 구간(일)"
+        default: "365"
+      when:
+        description: "구글뉴스 기간 제한 (예: 30d, 6m, 1y)"
+        default: "30d"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_DB_USER: ${{ secrets.SUPABASE_DB_USER }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_POOLER_HOST: ${{ secrets.SUPABASE_POOLER_HOST }}
+      SUPABASE_POOLER_PORT: ${{ secrets.SUPABASE_POOLER_PORT }}
+      SUPABASE_DB_NAME: ${{ secrets.SUPABASE_DB_NAME }}
+      OPENDART_KEY: ${{ secrets.OPENDART_KEY }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      RADAR_SITE_URL: ${{ vars.RADAR_SITE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Collect and load
+        id: collect
+        run: |
+          python -m radar.run             --days ${{ github.event.inputs.days || '365' }}             --when "${{ github.event.inputs.when || '30d' }}"
+
+      - name: Alert on new contracts
+        run: python -m radar.alert data/new_events.json
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: radar-${{ github.run_number }}
+          path: |
+            data/events.json
+            data/new_events.json
+            reports/*.md
+          if-no-files-found: ignore
