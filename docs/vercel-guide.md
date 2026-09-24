@@ -41,6 +41,17 @@
 ~/.local/share/com.vercel.cli/auth.json  # Vercel CLI 세션
 ```
 
+전체 연동을 한 번에 확인하는 스크립트도 넣어 두었다:
+
+```bash
+cd /home/taming85/workspace/test-project
+uv run --with httpx --with python-dotenv python3 scripts/check_integrations.py
+# Integration check
+#   GitHub: OK  user=taming85  repos=1
+#   Tavily: OK  results=1
+#   Vercel: OK  account=pdlee1985-3111
+```
+
 `~/.bashrc`와 `~/.profile`이 `secrets.env`를 자동으로 읽는다. 그래서 새 터미널에서
 `GITHUB_TOKEN`, `TAVILY_API_KEY`를 바로 쓸 수 있다. 단, 에이전트가 쓰는 비대화형
 셸에는 자동 적용되지 않으므로 스크립트에서는 아래처럼 직접 읽는 편이 안전하다.
